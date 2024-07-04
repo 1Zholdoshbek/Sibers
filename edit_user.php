@@ -16,17 +16,19 @@ $user = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_BCRYPT) : $user['password'];
+    $password = !empty($_POST['password']) ? $_POST['password'] : $user['password'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $gender = $_POST['gender'];
     $birth_date = $_POST['birth_date'];
+    $role = $_POST['role'];
 
-    $sql = "UPDATE users SET username=?, password=?, first_name=?, last_name=?, gender=?, birth_date=? WHERE id=?";
+    $sql = "UPDATE users SET username=?, password=?, first_name=?, last_name=?, gender=?, birth_date=?, role=? WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssi", $username, $password, $first_name, $last_name, $gender, $birth_date, $id);
 
-    if ($stmt->execute() === TRUE) {
+    $stmt->bind_param("sssssssi", $username, $password, $first_name, $last_name, $gender, $birth_date, $role, $id);
+
+    if ($stmt->execute()) {
         header('Location: index.php');
     } else {
         echo "Error: " . $stmt->error;
@@ -71,6 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <option value="female" <?php echo $user['gender'] == 'female' ? 'selected' : ''; ?>>Female</option>
             </select>
         </div>
+
+        <div class="mb-3 col-6">
+            <label for="role" class="form-label">Role</label>
+            <select id="role" name="role" class="form-select">
+                <option value="admin" <?php echo $user['role'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
+                <option value="user" <?php echo $user['role'] == 'user' ? 'selected' : ''; ?>>User</option>
+            </select>
+        </div>
+
         <div class="mb-3 col-6">
             <label for="birth_date" class="form-label">Birth Date</label>
             <input id="birth_date" type="date" name="birth_date" class="form-control" value="<?php echo $user['birth_date']; ?>" required>

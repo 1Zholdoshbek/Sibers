@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $last_name = $_POST['last_name'];
     $gender = $_POST['gender'];
     $birth_date = $_POST['birth_date'];
+    $role = $_POST['role'];
 
-    $sql = "INSERT INTO users (username, password, first_name, last_name, gender, birth_date)
-            VALUES ('$username', '$password', '$first_name', '$last_name', '$gender', '$birth_date')";
+    $sql = "INSERT INTO users (username, password, first_name, last_name, gender, birth_date,role)
+            VALUES ('$username', '$password', '$first_name', '$last_name', '$gender', '$birth_date','$role')";
 
     if ($conn->query($sql) === TRUE) {
         header('Location: index.php');
@@ -65,6 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </select>
         </div>
         <div class="mb-3 col-6">
+            <label for="role" class="form-label">Role </label>
+            <select class="form-control" id="role" name="role">
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+            </select>
+        </div>
+        <div class="mb-3 col-6">
             <label for="date" class="form-label">Birth day</label>
             <input class="form-control" id="date" type="date" name="birth_date" required>
         </div>
@@ -80,4 +88,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 </html>
-

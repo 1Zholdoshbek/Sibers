@@ -5,19 +5,23 @@ include('config.php');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-
     $sql = "SELECT * FROM users WHERE username='$username'";
     $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if ($password == $row['password']) {
-            $_SESSION['admin'] = $username;
-            header('Location: index.php');
-        } else {
-            echo "Invalid password.";
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($password == $row['password']) {
+                if($row['role']=='admin') {
+                    $_SESSION['admin'] = $username;
+                    header('Location: index.php');
+                }
+                else {
+                    echo "Is not Admin";
+                }
+            } else {
+                echo "Invalid password.";
+            }
         }
-    } else {
+    else {
         echo "No user found.";
     }
 }

@@ -10,16 +10,12 @@ include('config.php');
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id';
 $order = isset($_GET['order']) ? $_GET['order'] : 'ASC';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10;
-$offset = ($page - 1) * $limit;
 
-$sql = "SELECT * FROM users ORDER BY $sort $order LIMIT $limit OFFSET $offset";
+$sql = "SELECT * FROM users ORDER BY $sort $order";
 $result = $conn->query($sql);
 
 $total_sql = "SELECT COUNT(*) as count FROM users";
 $total_result = $conn->query($total_sql);
-$total_row = $total_result->fetch_assoc();
-$total_pages = ceil($total_row['count'] / $limit);
 ?>
 <!doctype html>
 <html lang="en">
@@ -86,6 +82,7 @@ $total_pages = ceil($total_row['count'] / $limit);
             <th>Last Name</th>
             <th>Gender</th>
             <th>Birth Date</th>
+            <th>Role</th>
             <th>Actions</th>
         </tr>
         <?php while ($row = $result->fetch_assoc()): ?>
@@ -96,6 +93,7 @@ $total_pages = ceil($total_row['count'] / $limit);
                 <td><?php echo $row['last_name']; ?></td>
                 <td><?php echo $row['gender']; ?></td>
                 <td><?php echo $row['birth_date']; ?></td>
+                <td><?php echo $row['role']; ?></td>
                 <td>
                     <a href="edit_user.php?id=<?php echo $row['id']; ?>">Edit</a>
                     <a href="delete_user.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
@@ -103,15 +101,6 @@ $total_pages = ceil($total_row['count'] / $limit);
             </tr>
         <?php endwhile; ?>
     </table>
-    <div class="pagination">
-        <ul>
-            <li><a href="#">&laquo;</a></li>
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-            <?php endfor; ?>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
